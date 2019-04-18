@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Stalk Me!</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    
+    <link href="css/style.css" rel="stylesheet">
+	
+	<style>
+		body {
+			background-color:#dbd9cb;
+		}
+		.grey {
+			color:#CECDCB;
+		}
+		span {
+			display: inline;
+		}
+	</style>
+	<script>
+		google.charts.load('current',{'packages':['corechart']});
+		function drawChart(ac,par,wa,tle,mle,ce,other){
+			console.log("YO");
+			console.log(ac);
+			var data = google.visualization.arrayToDataTable([
+				['Verdict','Count'],
+				['AC',ac],
+				['WA',wa],
+				['Partial',par],
+				['TLE',tle],
+				['MLE',mle],
+				['Comp. Error',ce],
+				['Other',other]
+				]);
+			var options ={
+				title: 'Submission Summary',
+				backgroundColor: '#dbd9cb'
+			};
+			var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+			chart.draw(data, options);
+
+		}
+		$.ajax({
+			url: "https://codeforces.com/api/user.status?handle=dhr_1",
+			type: "GET",
+			datatype: "json",
+			success: function(data){
+				jdata = data["result"];
+				var ac=0,wa=0,tle=0,mle=0,other=0,par=0,ce=0;
+				for(var i=0;i<jdata.length;i++)
+				{
+					var ver = jdata[i]["verdict"];
+					if(jdata[i]["verdict"]=="OK")
+					{
+						ac++;
+					}
+					else if(ver=="WRONG_ANSWER")
+					{
+						wa++;
+					}
+					else if(ver=="COMPILATION_ERROR")
+					{
+						ce++;
+					}
+					else if(ver=="TIME_LIMIT_EXCEEDED")
+					{
+						tle++;
+					}
+					else if(ver=="MEMORY_LIMIT_EXCEEDED")
+					{
+						mle++;
+					}
+					else if(ver=="PARTIAL")
+					{
+						par++;
+					}
+					else other++;
+				}
+
+			google.charts.setOnLoadCallback(drawChart(ac,par,wa,tle,mle,ce,other));
+				console.log(ac);
+			}
+		});
+	</script>
+</head>
+<body>
+	<header>
+
+        <!--Navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark stylish-color">
+
+            <!-- Navbar brand -->
+            <a class="navbar-brand" href="#">Dheeraj</a>
+
+            <!-- Collapse button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav" aria-controls="basicExampleNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="basicExampleNav">
+
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Introduction
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/stalk.html">Stalk Me!
+                        	<span class="sr-only">(current)</span>
+                        </a>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contest.html">Upcoming Contests!</a>
+                    </li>
+
+                    <!-- Dropdown -->
+                </ul>
+                
+            </div>
+            <!-- Collapsible content -->
+
+        </nav>
+        <!--/.Navbar-->
+
+    </header>
+	<script>
+		function rat(s,t)
+		{
+			if(t<1200)
+			{
+				$(s).html("<span style=\"color:#a6b5b2\">"+t+"</span>");
+			}
+			else if(t<1400)
+			{
+				$(s).html("<span style=\"color:#40ef40\">"+t+"</span>");	
+			}
+			else if(t<1600)
+			{
+				$(s).html("<span style=\"color:#26f2e8\">"+t+"</span>");
+			}
+			else if(t<1900)
+			{
+				$(s).html("<span style=\"color:#2e00ff\">"+t+"</span>");
+			}
+			else if(t<2200)
+			{
+				$(s).html("<span style=\"color:#ffe900\">"+t+"</span>");
+			}
+			else {
+				$(s).html("<span style=\"color:#ff0000\">"+t+"</span>");
+			}
+		}
+		$.ajax({
+			url : 'https://codeforces.com/api/user.info?handles=dhr_1',
+			type : 'GET',
+			datatype : 'json',
+			success : function(data)
+			{
+				jdata=data["result"][0];
+				console.log(jdata);
+				console.log(jdata["country"]);
+//				$("#Country").text(jdata["country"]);
+				$("#name").text(jdata["firstName"]);
+
+				$("#handle").text(jdata["handle"]);
+				var t = jdata["rating"];
+			//	var t = 1100;
+				rat("#rating",t);
+				rat("#maxrating",jdata["maxRating"]);
+				var i="https:";
+				var str2=jdata["titlePhoto"];
+				i = i+str2;
+				var img = document.createElement("img");
+				img.src = i;
+				img.style ="position: relative; width:20em; height: 15em;";
+				console.log(img.src);
+				var src=document.getElementById("imgg");
+
+				img.onload = function(){
+				src.appendChild(img);
+				}		
+			}
+
+		});
+	</script>
+<!--	<div class="header" id="headerwrap"> -->
+<div class="container">
+	<div class="row">
+		<p>
+		<br/><br/>
+		</p>
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+			<h1>
+				<div id="name"></div>
+			</h1>
+			<h3>
+				Handle: <span id="handle"></span>
+			</h3>
+			<p>
+				Rating: <span id="rating"></span>
+				Max. Rating: <span id="maxrating"></span>
+			</p>
+			<br>	
+			
+		</div>
+		<div class="col-lg-3">
+		</div>
+		<div id="imgg" class="col-lg-3">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+				<div id="piechart" style="position:relative; width: 50em; height:30em;">
+				</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js">
+</script>
+    <!-- Bootstrap tooltips -->
+<script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="js/bootstrap.min.js">
+</script>
+    <!-- MDB core JavaScript -->
+<script type="text/javascript" src="js/mdb.min.js"></script>
+
+</body>
+</html>
